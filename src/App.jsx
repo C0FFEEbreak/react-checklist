@@ -78,25 +78,29 @@ function MyHook() {
     );
   };
 
-  const myFetchVar = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+const myFetchVar = async () => {
+  try {
+    setLoading(true);
+    // This API is strictly about food and very stable
+    const response = await fetch("https://www.themealdb.com/api/json/v1/1/random.php");
+    
+    if (!response.ok) throw new Error("Server error");
 
-      const response = await fetch("https://dummyjson.com/quotes/random");
+    const result = await response.json();
+    const meal = result.meals[0];
 
-      if (!response.ok) {
-        throw new Error("Server problem!");
-      }
-
-      const result = await response.json();
-      myFunc(result);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    myFunc({
+      quote: `Today's Recipe Idea: Try making ${meal.strMeal}! It's a classic ${meal.strArea} ${meal.strCategory} dish.`,
+      author: "Chef's Suggestion"
+    });
+    
+    setError(null);
+  } catch (err) {
+    setError("Could not load food tip.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     myFetchVar();
@@ -106,7 +110,7 @@ function MyHook() {
   if (error)
     return (
       <h1>
-        Error: {error} <button onClick={myFetchVar}>Try Again</button>
+        Error: {error} <button onClick={myFetchVar} aria-label="Try again task">Try Again</button>
       </h1>
     );
 
@@ -192,7 +196,7 @@ function MyHook() {
                     if (event.key === "Escape") setEditingId(null);
                   }}
                 />
-                <button className="icon-btn" onClick={() => setEditingId(null)}>
+                <button className="icon-btn" onClick={() => setEditingId(null)} aria-label="Close edit task">
                   <i className="fa-solid fa-xmark"></i>
                 </button>
               </>
@@ -211,6 +215,7 @@ function MyHook() {
                 <button
                   className="icon-btn"
                   onClick={() => startEdit(myEntryVar)}
+                  aria-label="Edit task"
                 >
                   <i className="fa-regular fa-pen-to-square"></i>
                 </button>
@@ -218,6 +223,7 @@ function MyHook() {
                 <button
                   className="icon-btn delete-btn"
                   onClick={() => deleteItem(myEntryVar.id)}
+                  aria-label="Delete task"
                 >
                   <i className="fa-regular fa-trash-can"></i>
                 </button>

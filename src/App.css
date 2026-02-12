@@ -39,7 +39,7 @@ body {
   gap: 12px;
 }
 
-/* --- 3. ROW 1: PROGRESS GROUP (Combined for no-jump height) --- */
+/* --- 3. ROW 1: PROGRESS GROUP (for no-jump height) --- */
 .progress-group {
   display: flex;
   flex-direction: column;
@@ -199,7 +199,6 @@ input[type="checkbox"]:hover {
 }
 
 input[type="checkbox"]:focus {
-  /* Using your Teal color for the focus ring looks more professional than the default blue */
   outline: 2px solid #177E89; 
   outline-offset: 3px;
 }
